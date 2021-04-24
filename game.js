@@ -4,6 +4,7 @@ function preload() {
     this.load.svg('map', 'assets/map.svg');
     this.load.spritesheet('pacman_ss', 'assets/pacman.svg', {frameWidth:15, frameHeight:15});
     this.load.svg('food', 'assets/food.svg');
+    this.load.spritesheet('ghost', 'assets/ghost.svg', {frameWidth:15, frameHeight:15});
 }
 
 function create() {
@@ -12,7 +13,6 @@ function create() {
     const chomp_speed = 7
     gameState.map = this.add.sprite(300,300,'map');
     gameState.foods = this.physics.add.group();
-    // gameState.foods.create(33,45,'food');
 
     gameState.pacman = this.physics.add.sprite(12, 296,'pacman_ss');
     this.anims.create(
@@ -75,6 +75,39 @@ function create() {
         }
     });
 
+    // Generate ghosts
+    gameState.ghosts = this.physics.add.group();
+    const ghost_speed = 170;
+    const ghost_num = 20;
+
+    this.anims.create(
+        {key: 'left',
+        frames: this.anims.generateFrameNumbers('ghost', {frames: [0]}),
+        }
+    );
+    this.anims.create(
+        {key: 'right',
+        frames: this.anims.generateFrameNumbers('ghost', {frames: [1]}),
+        }
+    );
+    this.anims.create(
+        {key: 'up',
+        frames: this.anims.generateFrameNumbers('ghost', {frames: [2]}),
+        }
+    );
+    this.anims.create(
+        {key: 'down',
+        frames: this.anims.generateFrameNumbers('ghost', {frames: [3]}),
+        }
+    );
+    
+    for(let i = 0; i< ghost_num; i++){
+        gameState.ghosts.create(300, 300, 'ghost').setVelocityX(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setVelocityY(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setCollideWorldBounds().setBounceX(1).setBounceY(1);
+    }
+    
+    
+
+
     // Add score text
     gameState.scoreText = this.add.text(260, 575, `Score: 0`, { fontSize: '15px', fill: '#FFFFFF' });
 
@@ -83,8 +116,6 @@ function create() {
 }
 
 function update() {
-    // console.log(this.textures.getPixel(this.input.mousePointer.x,this.input.mousePointer.y,'map').b);
-    // console.log(gameState.pacman.body.velocity.x)
 
     // Pacman Controls
     
