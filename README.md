@@ -2,5 +2,6 @@
 
 #### Written by Dean Raguso 
 
-A basic implementation of the classic arcade game, Pac Man.
+<img src='screenshot.png'>
 
+A basic implementation of the classic arcade game, Pac Man.

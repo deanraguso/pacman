@@ -102,8 +102,10 @@ function create() {
         }
     );
     
+    gameState.ghost = [];
     for(let i = 0; i< ghost_num; i++){
-        gameState.ghosts.create(300, 300, 'ghost').setVelocityX(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setVelocityY(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setCollideWorldBounds().setBounceX(1).setBounceY(1);
+        let x = gameState.ghosts.create(300, 300, 'ghost').setVelocityX(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setVelocityY(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setCollideWorldBounds().setBounceX(1).setBounceY(1);
+        gameState.ghost.push(x);
     }
     
     // Ghost collider
@@ -213,6 +215,20 @@ function update() {
             gameState.pacman.anims.stop();
         }
     }
+    
+    // console.log(gameState.world_collide)
+    // for(let i in gameState.ghost){
+    //     if(gameState.ghost[i].)
+    //     if (gameState.ghost[i].body.velocity.x > 0) {     //Moving right
+            
+    //     } else if (gameState.ghost[i].body.velocity.x < 0){
+
+    //     } else if (gameState.ghost[i].body.velocity.y < 0){
+
+    //     } else if (gameState.ghost[i].body.velocity.y > 0){
+
+    //     }
+    // }
 
     // Game Logic
     if(!gameState.status){
