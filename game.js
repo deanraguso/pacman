@@ -8,6 +8,7 @@ function preload() {
 
 function create() {
     // Sprite configuration
+    gameState.speed = 100;
     const chomp_speed = 7
     gameState.map = this.add.sprite(300,300,'map');
     gameState.foods = this.physics.add.group();
@@ -49,15 +50,33 @@ function create() {
 
     const _this = this;
     gameState.foodAmount = 0;
+    gameState.score = 0;
     // Populate map with food
     for(let i = 33; i<580; i+=19){
-        for(let j = 45; j<560; j +=20){
+        for(let j = 45; j<560; j +=19){
             if(foodSpace(i,j)){
                 gameState.foods.create(i, j, 'food').setScale(0.3);
                 gameState.foodAmount ++;
             }
         }
     }
+    this.physics.add.collider(gameState.pacman, gameState.foods, (pacman, food)=> {
+        gameState.score ++;
+        gameState.scoreText.setText(`Score: ${gameState.score}`);
+        food.destroy();
+        if (gameState.pacman.body.velocity.x > 0) {     //Moving right
+            gameState.pacman.setVelocityX(gameState.speed);
+        } else if (gameState.pacman.body.velocity.x < 0){
+            gameState.pacman.setVelocityX(-gameState.speed);
+        } else if (gameState.pacman.body.velocity.y < 0){
+            gameState.pacman.setVelocityY(-gameState.speed);
+        } else if (gameState.pacman.body.velocity.y > 0){
+            gameState.pacman.setVelocityY(gameState.speed);
+        }
+    });
+
+    // Add score text
+    gameState.scoreText = this.add.text(260, 575, `Score: 0`, { fontSize: '15px', fill: '#FFFFFF' });
 
     // Add cursor controls
     gameState.cursors = this.input.keyboard.createCursorKeys();
@@ -68,27 +87,27 @@ function update() {
     // console.log(gameState.pacman.body.velocity.x)
 
     // Pacman Controls
-    const speed = 100;
+    
     if(gameState.cursors.left.isDown){
         gameState.pacman.angle = 0;
         gameState.pacman.play('left');
         gameState.pacman.setVelocityY(0);
-        gameState.pacman.setVelocityX(-speed);
+        gameState.pacman.setVelocityX(-gameState.speed);
     } else if(gameState.cursors.right.isDown){
         gameState.pacman.angle = 0;
         gameState.pacman.play('right');
         gameState.pacman.setVelocityY(0);
-        gameState.pacman.setVelocityX(speed);
+        gameState.pacman.setVelocityX(gameState.speed);
     } else if(gameState.cursors.down.isDown){
         gameState.pacman.play('right');
         gameState.pacman.angle = 90;
         gameState.pacman.setVelocityX(0);
-        gameState.pacman.setVelocityY(speed);
+        gameState.pacman.setVelocityY(gameState.speed);
     } else if(gameState.cursors.up.isDown){
         gameState.pacman.play('left');
         gameState.pacman.angle = 90;
         gameState.pacman.setVelocityX(0);
-        gameState.pacman.setVelocityY(-speed);
+        gameState.pacman.setVelocityY(-gameState.speed);
     }
 
     // Is the next 5 non-blue (not r 0 g 64 b 245)
