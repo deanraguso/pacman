@@ -3,15 +3,15 @@ const gameState = {};
 function preload() {
     this.load.svg('map', 'assets/map.svg');
     this.load.spritesheet('pacman_ss', 'assets/pacman.svg', {frameWidth:15, frameHeight:15});
+    this.load.svg('food', 'assets/food.svg');
 }
 
 function create() {
     // Sprite configuration
     const chomp_speed = 7
     gameState.map = this.add.sprite(300,300,'map');
-
-    gameState.map = this.add.path(50,500);
-    gameState.map.inputEnabled = true;
+    gameState.foods = this.physics.add.group();
+    // gameState.foods.create(33,45,'food');
 
     gameState.pacman = this.physics.add.sprite(12, 296,'pacman_ss');
     this.anims.create(
@@ -32,6 +32,32 @@ function create() {
 
     // Set collider between pacman and walls
     this.physics.add.collider(gameState.pacman, gameState.map)
+    
+    // Has space to spawn food
+    function foodSpace(x,y){
+        buffer = 7;
+        for(let a = -buffer; a <= buffer; a++){
+            for(let b = -buffer; b<=buffer; b++){
+                predictedColor = _this.textures.getPixel(x + a, y + b,'map');
+                if(predictedColor.g == 64 && predictedColor.b == 245){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    const _this = this;
+    gameState.foodAmount = 0;
+    // Populate map with food
+    for(let i = 33; i<580; i+=19){
+        for(let j = 45; j<560; j +=20){
+            if(foodSpace(i,j)){
+                gameState.foods.create(i, j, 'food').setScale(0.3);
+                gameState.foodAmount ++;
+            }
+        }
+    }
 
     // Add cursor controls
     gameState.cursors = this.input.keyboard.createCursorKeys();
