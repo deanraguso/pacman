@@ -1,11 +1,11 @@
 const gameState = {};
 
 function preload() {
-
+    gameState.map = this.load.image('map', 'assets/map.svg');
 }
 
 function create() {
-
+    const map = this.add.image(300,300,'map');
 }
 
 function update() {
