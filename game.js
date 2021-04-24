@@ -9,6 +9,7 @@ function preload() {
 
 function create() {
     // Sprite configuration
+    gameState.status = true;
     gameState.speed = 100;
     const chomp_speed = 7
     gameState.map = this.add.sprite(300,300,'map');
@@ -105,8 +106,12 @@ function create() {
         gameState.ghosts.create(300, 300, 'ghost').setVelocityX(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setVelocityY(Math.floor(Math.random()*ghost_speed - ghost_speed/2)).setCollideWorldBounds().setBounceX(1).setBounceY(1);
     }
     
-    
-
+    // Ghost collider
+    this.physics.add.collider(gameState.ghosts, gameState.pacman, ()=>{
+        gameState.pacman.stop();
+        gameState.status = false;
+        gameState.scoreText.setText("YOU LOSE");
+    });
 
     // Add score text
     gameState.scoreText = this.add.text(260, 575, `Score: 0`, { fontSize: '15px', fill: '#FFFFFF' });
@@ -207,6 +212,16 @@ function update() {
             gameState.pacman.setVelocityY(0);
             gameState.pacman.anims.stop();
         }
+    }
+
+    // Game Logic
+    if(!gameState.status){
+        this.scene.restart();
+    }
+
+    if(gameState.score >= gameState.foodAmount){
+        gameState.scoreText.setText("YOU WIN");
+        this.scene.restart();
     }
 }
 
